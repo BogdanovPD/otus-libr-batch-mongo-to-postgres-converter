@@ -6,16 +6,21 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Sort;
 import ru.otus.spring.libr.converter.entities.mongo.MongoBook;
 import ru.otus.spring.libr.converter.entities.relational.Book;
 import ru.otus.spring.libr.converter.listeners.JobNotificationListener;
 import ru.otus.spring.libr.converter.processor.BookItemProcessor;
 import ru.otus.spring.libr.converter.repositories.mongo.MongoBookRepository;
 import ru.otus.spring.libr.converter.repositories.relational.BookRepository;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableBatchProcessing
@@ -33,6 +38,9 @@ public class BatchConfiguration {
         var reader = new RepositoryItemReader<MongoBook>();
         reader.setRepository(mongoBookRepository);
         reader.setMethodName("findAll");
+        Map<String, Sort.Direction> sort = new HashMap<>();
+        sort.put("id", Sort.Direction.ASC);
+        reader.setSort(sort);
         return reader;
     }
 
@@ -52,7 +60,7 @@ public class BatchConfiguration {
     @Bean
     public Step step() {
         return stepBuilderFactory.get("step")
-                .<MongoBook, Book> chunk(2)
+                .<MongoBook, Book> chunk(1)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())

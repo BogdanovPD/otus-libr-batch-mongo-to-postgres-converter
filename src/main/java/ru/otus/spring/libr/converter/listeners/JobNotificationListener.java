@@ -11,13 +11,13 @@ public class JobNotificationListener extends JobExecutionListenerSupport {
 
     @Override
     public void afterJob(JobExecution jobExecution) {
-        log.info("Migration started");
+        log.info("Migration completed");
         super.afterJob(jobExecution);
     }
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        log.info("Migration completed");
+        log.info("Migration started");
         super.beforeJob(jobExecution);
     }
 }

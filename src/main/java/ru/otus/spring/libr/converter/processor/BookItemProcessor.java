@@ -2,6 +2,7 @@ package ru.otus.spring.libr.converter.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 import ru.otus.spring.libr.converter.entities.mongo.MongoBook;
 import ru.otus.spring.libr.converter.entities.relational.Author;
 import ru.otus.spring.libr.converter.entities.relational.Book;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class BookItemProcessor implements ItemProcessor<MongoBook, Book> {
 
@@ -50,7 +52,7 @@ public class BookItemProcessor implements ItemProcessor<MongoBook, Book> {
     }
 
     private Book getBook(Author author, String bookName, Genre genre) {
-        Optional<Book> bookOptional = bookRepository.findAllByAuthorAndName(author, bookName);
+        Optional<Book> bookOptional = bookRepository.findAllByNameAndAuthor_Name(bookName, author.getName());
         return bookOptional.orElse(Book.builder()
                 .author(author)
                 .genre(genre)

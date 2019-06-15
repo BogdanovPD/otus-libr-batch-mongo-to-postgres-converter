@@ -10,11 +10,12 @@ spring:
     username: libr_usr
     password: libr
     initialization-mode: always
-    jpa:
-      properties:
-        hibernate:
-          temp:
-            use_jdbc_metadata_defaults: false
-        #        ddl-auto: create-drop
   jpa:
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        #        ddl-auto: create-drop
     show-sql: true
+  batch:
+    initialize-schema: always
